@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { saveSegment, addToTM } from '@/app/dashboard/projects/[id]/editor/[docId]/actions'
+import { saveSegment, addToTM } from '@/lib/editor-actions'
 
 interface Segment {
   id: string
