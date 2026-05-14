@@ -19,40 +19,40 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold text-white tracking-tight">my_tms</h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <h1 className="font-display text-3xl font-semibold text-slate-900 tracking-tight">my_tms</h1>
+          <p className="text-slate-600 text-sm mt-2">
             {mode === 'login' ? 'Sign in to your workspace' : 'Create your workspace'}
           </p>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-4">
+        <div className="glass-card rounded-2xl p-6 md:p-7 space-y-4">
           <form action={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">Email</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Email</label>
               <input
                 name="email"
                 type="email"
                 required
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full glass-inset rounded-xl px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-400/55 focus:border-transparent transition-shadow"
                 placeholder="you@example.com"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">Password</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Password</label>
               <input
                 name="password"
                 type="password"
                 required
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full glass-inset rounded-xl px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-400/55 focus:border-transparent transition-shadow"
                 placeholder="••••••••"
               />
             </div>
 
             {error && (
-              <p className="text-red-400 text-xs bg-red-950 border border-red-900 rounded-lg px-3 py-2">
+              <p className="text-red-700 text-xs bg-red-50/90 border border-red-200/80 rounded-xl px-3 py-2 backdrop-blur-sm">
                 {error}
               </p>
             )}
@@ -60,16 +60,16 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg px-4 py-2.5 transition-colors"
+              className="w-full rounded-xl bg-brand-500 hover:bg-brand-600 disabled:opacity-50 text-white text-sm font-semibold px-4 py-2.5 shadow-lg shadow-brand-500/25 transition-colors"
             >
               {loading ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create account'}
             </button>
           </form>
 
-          <div className="border-t border-gray-800 pt-4 text-center">
+          <div className="border-t border-white/50 pt-4 text-center">
             <button
               onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(null) }}
-              className="text-xs text-gray-400 hover:text-white transition-colors"
+              className="text-xs text-slate-600 hover:text-brand-700 transition-colors font-medium"
             >
               {mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
             </button>

@@ -23,10 +23,10 @@ interface Props {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  untranslated: 'bg-gray-800 text-gray-400',
-  draft: 'bg-yellow-950 text-yellow-400',
-  translated: 'bg-blue-950 text-blue-400',
-  reviewed: 'bg-green-950 text-green-400',
+  untranslated: 'bg-slate-200/90 text-slate-700 border border-slate-300/50',
+  draft: 'bg-amber-100/95 text-amber-900 border border-amber-200/60',
+  translated: 'bg-sky-100/95 text-sky-900 border border-sky-200/60',
+  reviewed: 'bg-emerald-100/95 text-emerald-900 border border-emerald-200/60',
 }
 
 export default function SegmentRow({
@@ -68,21 +68,21 @@ export default function SegmentRow({
 
   return (
     <div
-      className={`grid grid-cols-2 border-b border-gray-800 transition-colors cursor-pointer
-        ${isActive ? 'bg-gray-800/60' : 'hover:bg-gray-800/30'}`}
+      className={`grid grid-cols-2 border-b border-white/40 transition-colors cursor-pointer
+        ${isActive ? 'bg-brand-100/45 backdrop-blur-sm' : 'hover:bg-white/25'}`}
       onClick={onActivate}
     >
       {/* Index */}
       <div className="col-span-2 flex items-center gap-2 px-4 pt-2">
-        <span className="text-xs text-gray-600 font-mono">{segment.order_index + 1}</span>
-        <span className={`text-xs rounded px-1.5 py-0.5 ${STATUS_STYLES[segment.status]}`}>
+        <span className="text-xs text-slate-500 font-mono tabular-nums">{segment.order_index + 1}</span>
+        <span className={`text-xs rounded-md px-1.5 py-0.5 font-semibold ${STATUS_STYLES[segment.status]}`}>
           {segment.status}
         </span>
       </div>
 
       {/* Source */}
-      <div className="px-4 py-2 border-r border-gray-800">
-        <p className="text-sm text-gray-300 leading-relaxed">{segment.source_text}</p>
+      <div className="px-4 py-2 border-r border-white/40">
+        <p className="text-sm text-slate-800 leading-relaxed">{segment.source_text}</p>
       </div>
 
       {/* Target */}
@@ -95,22 +95,22 @@ export default function SegmentRow({
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               rows={3}
-              className="w-full bg-gray-900 border border-indigo-500 rounded-lg px-3 py-2 text-sm text-white resize-none focus:outline-none focus:border-indigo-400 transition-colors"
+              className="w-full glass-inset border-brand-300/80 rounded-xl px-3 py-2 text-sm text-slate-900 resize-none focus:outline-none focus:ring-2 focus:ring-brand-400/50 transition-shadow placeholder-slate-400"
               placeholder="Enter translation…"
             />
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-600">⌘+Enter to confirm</p>
+              <p className="text-xs text-slate-500">⌘+Enter to confirm</p>
               <button
                 onClick={e => { e.stopPropagation(); handleConfirm() }}
                 disabled={saving || !target.trim()}
-                className="text-xs bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-lg px-3 py-1.5 transition-colors"
+                className="text-xs bg-brand-500 hover:bg-brand-600 disabled:opacity-50 text-white font-semibold rounded-lg px-3 py-1.5 shadow-sm transition-colors"
               >
                 {saving ? 'Saving…' : 'Confirm'}
               </button>
             </div>
           </div>
         ) : (
-          <p className={`text-sm leading-relaxed ${target ? 'text-white' : 'text-gray-600 italic'}`}>
+          <p className={`text-sm leading-relaxed ${target ? 'text-slate-900' : 'text-slate-400 italic'}`}>
             {target || 'Click to translate…'}
           </p>
         )}

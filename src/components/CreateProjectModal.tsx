@@ -42,36 +42,36 @@ export default function CreateProjectModal() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
+        className="rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-4 py-2 shadow-lg shadow-brand-500/25 transition-colors w-fit"
       >
         + New project
       </button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="relative bg-gray-900 border border-gray-800 rounded-xl p-6 w-full max-w-md shadow-2xl">
-            <h2 className="text-base font-semibold text-white mb-5">New project</h2>
+          <div className="absolute inset-0 bg-slate-900/25 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="relative glass-card rounded-2xl p-6 md:p-7 w-full max-w-md shadow-2xl shadow-brand-900/15">
+            <h2 className="font-display text-lg font-semibold text-slate-900 mb-5">New project</h2>
 
             <form ref={formRef} action={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-400 mb-1.5">Project name</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Project name</label>
                 <input
                   name="name"
                   type="text"
                   required
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full glass-inset rounded-xl px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-400/55 transition-shadow"
                   placeholder="e.g. Website Q3 Localization"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Source language</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Source language</label>
                   <select
                     name="source_language"
                     required
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full glass-inset rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-400/55 transition-shadow"
                   >
                     {LANGUAGES.map(l => (
                       <option key={l.code} value={l.code}>{l.label}</option>
@@ -79,11 +79,11 @@ export default function CreateProjectModal() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Target language</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Target language</label>
                   <select
                     name="target_language"
                     required
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full glass-inset rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-400/55 transition-shadow"
                   >
                     {LANGUAGES.map(l => (
                       <option key={l.code} value={l.code}>{l.label}</option>
@@ -93,7 +93,7 @@ export default function CreateProjectModal() {
               </div>
 
               {error && (
-                <p className="text-red-400 text-xs bg-red-950 border border-red-900 rounded-lg px-3 py-2">
+                <p className="text-red-700 text-xs bg-red-50/90 border border-red-200/80 rounded-xl px-3 py-2">
                   {error}
                 </p>
               )}
@@ -102,14 +102,14 @@ export default function CreateProjectModal() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium rounded-lg px-4 py-2.5 transition-colors"
+                  className="flex-1 glass-inset hover:bg-white/55 text-slate-800 text-sm font-semibold rounded-xl px-4 py-2.5 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg px-4 py-2.5 transition-colors"
+                  className="flex-1 bg-brand-500 hover:bg-brand-600 disabled:opacity-50 text-white text-sm font-semibold rounded-xl px-4 py-2.5 shadow-md shadow-brand-500/20 transition-colors"
                 >
                   {loading ? 'Creating…' : 'Create project'}
                 </button>

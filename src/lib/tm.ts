@@ -28,8 +28,8 @@ export function scoreLabel(score: number): string {
 }
 
 export function scoreBadgeClass(score: number): string {
-  if (score >= 1) return 'bg-green-950 text-green-400'
-  if (score >= 0.85) return 'bg-blue-950 text-blue-400'
-  if (score >= 0.6) return 'bg-yellow-950 text-yellow-400'
-  return 'bg-gray-800 text-gray-400'
+  if (score >= 1) return 'bg-emerald-100/95 text-emerald-900 border-emerald-200/60'
+  if (score >= 0.85) return 'bg-sky-100/95 text-sky-900 border-sky-200/60'
+  if (score >= 0.6) return 'bg-amber-100/95 text-amber-900 border-amber-200/60'
+  return 'bg-slate-200/90 text-slate-700 border-slate-300/50'
 }

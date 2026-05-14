@@ -6,15 +6,15 @@ async function Header() {
   const { data: { user } } = await supabase.auth.getUser()
 
   return (
-    <header className="border-b border-gray-800 bg-gray-900">
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <span className="font-semibold text-white tracking-tight">my_tms</span>
+    <header className="glass-panel sticky top-0 z-40 border-b border-white/50 rounded-b-2xl mx-3 mt-3 md:mx-6 md:mt-4 shadow-sm">
+      <div className="max-w-6xl mx-auto px-5 md:px-6 h-14 flex items-center justify-between">
+        <span className="font-display text-lg font-semibold text-slate-800 tracking-tight">my_tms</span>
         <div className="flex items-center gap-4">
-          <span className="text-xs text-gray-400">{user?.email}</span>
+          <span className="text-xs text-slate-600">{user?.email}</span>
           <form action={logout}>
             <button
               type="submit"
-              className="text-xs text-gray-400 hover:text-white transition-colors"
+              className="text-xs text-slate-600 hover:text-brand-700 transition-colors font-medium"
             >
               Sign out
             </button>
@@ -27,9 +27,9 @@ async function Header() {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen">
       <Header />
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-6xl mx-auto px-5 md:px-6 py-8">
         {children}
       </main>
     </div>
