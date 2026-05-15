@@ -24,7 +24,7 @@ export default function LoginPage() {
         <div className="mb-8 text-center">
           <h1 className="font-display text-3xl font-semibold text-slate-900 tracking-tight">my_tms</h1>
           <p className="text-slate-600 text-sm mt-2">
-            {mode === 'login' ? 'Sign in to your workspace' : 'Create your workspace'}
+            {mode === 'login' ? 'For quick testing, login with almeida.sergiomc@gmail.com | test123' : 'Create your workspace'}
           </p>
         </div>
 
