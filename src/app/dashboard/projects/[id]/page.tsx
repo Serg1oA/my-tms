@@ -45,7 +45,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <form action={loadDemoDocument.bind(null, id)}>
+            <form action={async (formData) => {
+              'use server';
+              await loadDemoDocument(id);
+            }}>
               <button
                 type="submit"
                 className="rounded-xl glass-inset hover:bg-white/55 text-slate-800 text-sm font-semibold px-4 py-2 transition-colors border border-white/60"

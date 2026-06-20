@@ -5,6 +5,15 @@ import { LANGUAGE_NAMES } from '@/lib/locale'
 import CreateProjectModal from '@/components/CreateProjectModal'
 import Link from 'next/link'
 
+interface Project {
+  id: string;
+  name: string;
+  source_locale: string;
+  target_locale: string;
+  owner_id: string;
+  created_at: any;
+}
+
 export default async function DashboardPage() {
   const user = await getUser()
   const snap = user
@@ -14,7 +23,11 @@ export default async function DashboardPage() {
         .get()
     : null
 
-  const projects = snap?.docs.map(d => ({ id: d.id, ...d.data() })) ?? []
+    
+  const projects: Project[] = snap?.docs.map(d => ({ 
+    id: d.id, 
+    ...d.data() 
+  } as Project)) ?? []
 
   return (
     <div>
@@ -43,7 +56,7 @@ export default async function DashboardPage() {
                   href={`/dashboard/projects/${project.id}`}
                   className="font-semibold text-slate-900 text-sm hover:text-brand-700 transition-colors line-clamp-2"
                 >
-                  {project.name as string}
+                  {project.name}
                 </Link>
                 <form action={deleteProject.bind(null, project.id)}>
                   <button
@@ -57,11 +70,11 @@ export default async function DashboardPage() {
 
               <div className="flex items-center gap-2 text-xs text-slate-600">
                 <span className="glass-inset rounded-lg px-2 py-0.5 font-medium">
-                  {LANGUAGE_NAMES[project.source_locale as string] ?? project.source_locale}
+                  {LANGUAGE_NAMES[project.source_locale] ?? project.source_locale}
                 </span>
                 <span className="text-slate-400">→</span>
                 <span className="glass-inset rounded-lg px-2 py-0.5 font-medium">
-                  {LANGUAGE_NAMES[project.target_locale as string] ?? project.target_locale}
+                  {LANGUAGE_NAMES[project.target_locale] ?? project.target_locale}
                 </span>
               </div>
 
