@@ -1,19 +1,50 @@
 'use client'
 
 import { useState } from 'react'
-import { login, signup } from '@/app/auth/actions'
+import { useRouter } from 'next/navigation'
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth'
+import { auth } from '@/lib/firebase/client'
+
+async function establishSession() {
+  const idToken = await auth.currentUser?.getIdToken(true)
+  if (!idToken) throw new Error('Could not get session token')
+  const res = await fetch('/api/auth/session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+  })
+  if (!res.ok) throw new Error('Could not create session')
+}
 
 export default function LoginPage() {
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState<'login' | 'signup'>('login')
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
     setLoading(true)
     setError(null)
-    const result = mode === 'login' ? await login(formData) : await signup(formData)
-    if (result?.error) {
-      setError(result.error)
+
+    const form = new FormData(e.currentTarget)
+    const email = form.get('email') as string
+    const password = form.get('password') as string
+
+    try {
+      if (mode === 'login') {
+        await signInWithEmailAndPassword(auth, email, password)
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password)
+      }
+      await establishSession()
+      router.push('/dashboard')
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Authentication failed')
       setLoading(false)
     }
   }
@@ -24,12 +55,12 @@ export default function LoginPage() {
         <div className="mb-8 text-center">
           <h1 className="font-display text-3xl font-semibold text-slate-900 tracking-tight">my_tms</h1>
           <p className="text-slate-600 text-sm mt-2">
-            {mode === 'login' ? 'For quick testing, login with almeida.sergiomc@gmail.com | test123' : 'Create your workspace'}
+            {mode === 'login' ? 'Sign in to your workspace' : 'Create your workspace'}
           </p>
         </div>
 
         <div className="glass-card rounded-2xl p-6 md:p-7 space-y-4">
-          <form action={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5">Email</label>
               <input
@@ -46,6 +77,7 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 required
+                minLength={6}
                 className="w-full glass-inset rounded-xl px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-400/55 focus:border-transparent transition-shadow"
                 placeholder="••••••••"
               />

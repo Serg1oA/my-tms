@@ -1,20 +1,20 @@
-import { createClient } from '@/lib/supabase/server'
+import { db } from '@/lib/firebase/admin'
+import { getUser } from '@/lib/firebase/auth'
 import { deleteProject } from './actions'
+import { LANGUAGE_NAMES } from '@/lib/locale'
 import CreateProjectModal from '@/components/CreateProjectModal'
 import Link from 'next/link'
 
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English', es: 'Spanish', fr: 'French', de: 'German',
-  it: 'Italian', pt: 'Portuguese', zh: 'Chinese', ja: 'Japanese',
-  ko: 'Korean', ar: 'Arabic', ru: 'Russian', nl: 'Dutch',
-}
-
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: projects } = await supabase
-    .from('projects')
-    .select('*')
-    .order('created_at', { ascending: false })
+  const user = await getUser()
+  const snap = user
+    ? await db.collection('projects')
+        .where('owner_id', '==', user.id)
+        .orderBy('created_at', 'desc')
+        .get()
+    : null
+
+  const projects = snap?.docs.map(d => ({ id: d.id, ...d.data() })) ?? []
 
   return (
     <div>
@@ -26,7 +26,7 @@ export default async function DashboardPage() {
         <CreateProjectModal />
       </div>
 
-      {(!projects || projects.length === 0) ? (
+      {projects.length === 0 ? (
         <div className="glass-card rounded-2xl p-16 text-center border-dashed border-2 border-white/60">
           <p className="text-slate-600 text-sm">No projects yet.</p>
           <p className="text-slate-500 text-xs mt-1">Create your first project to get started.</p>
@@ -43,7 +43,7 @@ export default async function DashboardPage() {
                   href={`/dashboard/projects/${project.id}`}
                   className="font-semibold text-slate-900 text-sm hover:text-brand-700 transition-colors line-clamp-2"
                 >
-                  {project.name}
+                  {project.name as string}
                 </Link>
                 <form action={deleteProject.bind(null, project.id)}>
                   <button
@@ -57,11 +57,11 @@ export default async function DashboardPage() {
 
               <div className="flex items-center gap-2 text-xs text-slate-600">
                 <span className="glass-inset rounded-lg px-2 py-0.5 font-medium">
-                  {LANGUAGE_NAMES[project.source_language] ?? project.source_language}
+                  {LANGUAGE_NAMES[project.source_locale as string] ?? project.source_locale}
                 </span>
                 <span className="text-slate-400">→</span>
                 <span className="glass-inset rounded-lg px-2 py-0.5 font-medium">
-                  {LANGUAGE_NAMES[project.target_language] ?? project.target_language}
+                  {LANGUAGE_NAMES[project.target_locale as string] ?? project.target_locale}
                 </span>
               </div>
 

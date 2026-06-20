@@ -2,21 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { createProject } from '@/app/dashboard/actions'
-
-const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'es', label: 'Spanish' },
-  { code: 'fr', label: 'French' },
-  { code: 'de', label: 'German' },
-  { code: 'it', label: 'Italian' },
-  { code: 'pt', label: 'Portuguese' },
-  { code: 'zh', label: 'Chinese' },
-  { code: 'ja', label: 'Japanese' },
-  { code: 'ko', label: 'Korean' },
-  { code: 'ar', label: 'Arabic' },
-  { code: 'ru', label: 'Russian' },
-  { code: 'nl', label: 'Dutch' },
-]
+import { LANGUAGES } from '@/lib/locale'
 
 export default function CreateProjectModal() {
   const [open, setOpen] = useState(false)
@@ -69,7 +55,7 @@ export default function CreateProjectModal() {
                 <div>
                   <label className="block text-xs font-semibold text-slate-600 mb-1.5">Source language</label>
                   <select
-                    name="source_language"
+                    name="source_locale"
                     required
                     className="w-full glass-inset rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-400/55 transition-shadow"
                   >
@@ -81,7 +67,7 @@ export default function CreateProjectModal() {
                 <div>
                   <label className="block text-xs font-semibold text-slate-600 mb-1.5">Target language</label>
                   <select
-                    name="target_language"
+                    name="target_locale"
                     required
                     className="w-full glass-inset rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-400/55 transition-shadow"
                   >

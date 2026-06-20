@@ -1,33 +1,39 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { db } from '@/lib/firebase/admin'
+import { getUser } from '@/lib/firebase/auth'
+import { deleteProjectCascade } from '@/lib/firebase/db'
 
 export async function createProject(formData: FormData) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) return { error: 'Not authenticated' }
 
   const name = formData.get('name') as string
-  const source_language = formData.get('source_language') as string
-  const target_language = formData.get('target_language') as string
+  const source_locale = formData.get('source_locale') as string
+  const target_locale = formData.get('target_locale') as string
 
-  if (!name || !source_language || !target_language)
+  if (!name || !source_locale || !target_locale)
     return { error: 'All fields are required' }
 
-  const { error } = await supabase.from('projects').insert({
+  await db.collection('projects').add({
     name,
-    source_language,
-    target_language,
+    source_locale,
+    target_locale,
     owner_id: user.id,
+    created_at: new Date().toISOString(),
   })
 
-  if (error) return { error: error.message }
   revalidatePath('/dashboard')
 }
 
 export async function deleteProject(id: string) {
-  const supabase = await createClient()
-  await supabase.from('projects').delete().eq('id', id)
+  const user = await getUser()
+  if (!user) return
+
+  const snap = await db.collection('projects').doc(id).get()
+  if (!snap.exists || snap.data()?.owner_id !== user.id) return
+
+  await deleteProjectCascade(id)
   revalidatePath('/dashboard')
 }

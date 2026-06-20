@@ -1,14 +1,13 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { saveSegment, addToTM } from '@/lib/editor-actions'
+import { saveSegment } from '@/app/dashboard/projects/[id]/actions'
 
 interface Segment {
   id: string
-  order_index: number
+  position: number
   source_text: string
   target_text: string
-  status: string
 }
 
 interface Props {
@@ -16,27 +15,19 @@ interface Props {
   isActive: boolean
   projectId: string
   docId: string
-  sourceLanguage: string
-  targetLanguage: string
   onActivate: () => void
   onTargetChange: (text: string) => void
 }
 
-const STATUS_STYLES: Record<string, string> = {
-  untranslated: 'bg-slate-200/90 text-slate-700 border border-slate-300/50',
-  draft: 'bg-amber-100/95 text-amber-900 border border-amber-200/60',
-  translated: 'bg-sky-100/95 text-sky-900 border border-sky-200/60',
-  reviewed: 'bg-emerald-100/95 text-emerald-900 border border-emerald-200/60',
-}
-
 export default function SegmentRow({
   segment, isActive, projectId, docId,
-  sourceLanguage, targetLanguage,
   onActivate, onTargetChange
 }: Props) {
   const [target, setTarget] = useState(segment.target_text)
   const [saving, setSaving] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const translated = target.trim().length > 0
 
   useEffect(() => {
     if (isActive) textareaRef.current?.focus()
@@ -49,8 +40,7 @@ export default function SegmentRow({
   async function handleConfirm() {
     if (!target.trim()) return
     setSaving(true)
-    await saveSegment(segment.id, target, 'translated', projectId, docId)
-    await addToTM(segment.source_text, target, sourceLanguage, targetLanguage)
+    await saveSegment(segment.id, target, projectId, docId)
     setSaving(false)
   }
 
@@ -72,20 +62,21 @@ export default function SegmentRow({
         ${isActive ? 'bg-brand-100/45 backdrop-blur-sm' : 'hover:bg-white/25'}`}
       onClick={onActivate}
     >
-      {/* Index */}
       <div className="col-span-2 flex items-center gap-2 px-4 pt-2">
-        <span className="text-xs text-slate-500 font-mono tabular-nums">{segment.order_index + 1}</span>
-        <span className={`text-xs rounded-md px-1.5 py-0.5 font-semibold ${STATUS_STYLES[segment.status]}`}>
-          {segment.status}
+        <span className="text-xs text-slate-500 font-mono tabular-nums">{segment.position + 1}</span>
+        <span className={`text-xs rounded-md px-1.5 py-0.5 font-semibold border ${
+          translated
+            ? 'bg-sky-100/95 text-sky-900 border-sky-200/60'
+            : 'bg-slate-200/90 text-slate-700 border-slate-300/50'
+        }`}>
+          {translated ? 'translated' : 'untranslated'}
         </span>
       </div>
 
-      {/* Source */}
       <div className="px-4 py-2 border-r border-white/40">
         <p className="text-sm text-slate-800 leading-relaxed">{segment.source_text}</p>
       </div>
 
-      {/* Target */}
       <div className="px-4 py-2">
         {isActive ? (
           <div className="space-y-2">

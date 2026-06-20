@@ -1,9 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
-import { logout } from '@/app/auth/actions'
+import { getUser } from '@/lib/firebase/auth'
+import LogoutButton from '@/components/LogoutButton'
 
 async function Header() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
 
   return (
     <header className="glass-panel sticky top-0 z-40 border-b border-white/50 rounded-b-2xl mx-3 mt-3 md:mx-6 md:mt-4 shadow-sm">
@@ -11,14 +10,7 @@ async function Header() {
         <span className="font-display text-lg font-semibold text-slate-800 tracking-tight">my_tms</span>
         <div className="flex items-center gap-4">
           <span className="text-xs text-slate-600">{user?.email}</span>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="text-xs text-slate-600 hover:text-brand-700 transition-colors font-medium"
-            >
-              Sign out
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </div>
     </header>
