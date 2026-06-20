@@ -102,6 +102,8 @@ export default function EditorClient({ project, document, segments, tmEntries }:
             isActive={activeId === segment.id}
             projectId={project.id}
             docId={document.id}
+            sourceLocale={project.source_locale}
+            targetLocale={project.target_locale}
             onActivate={() => setActiveId(segment.id)}
             onTargetChange={(text) => setLiveTargets(prev => ({ ...prev, [segment.id]: text }))}
           />

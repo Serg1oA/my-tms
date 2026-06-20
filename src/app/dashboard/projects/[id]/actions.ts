@@ -141,3 +141,36 @@ export async function exportXliff(projectId: string, docId: string) {
   const base = (document.filename as string).replace(/\.(xliff|xlf)$/i, '')
   return { xml, filename: `${base}-translated.xliff` }
 }
+
+// For AI and MT segment buttons:
+
+export async function getMT(text: string, src: string, tgt: string, engine: 'deepl' | 'gemini') {
+  if (engine === 'deepl') {
+    // Simplified split for region codes (EN-US -> EN), might break if DeepL requires specific sub-tags for the target lang - to be investigated later
+    const res = await fetch('https://api-free.deepl.com/v2/translate', {
+      method: 'POST',
+      headers: { Authorization: `DeepL-Auth-Key ${process.env.DEEPL_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: [text], target_lang: tgt.toUpperCase().split('-')[0] })
+    });
+    return (await res.json()).translations?.[0]?.text || '';
+  }
+
+  // Gemini Translation execution branch
+  const prompt = `Translate to ${tgt} from ${src}. Output ONLY the raw translation without quotes or markdown formatting:\n\n${text}`;
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  });
+  return (await res.json()).candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+}
+
+export async function evaluateSegment(srcText: string, tgtText: string, src: string, tgt: string) {
+  const prompt = `Rate the translation quality out of 100 with a ultra-short 1-sentence critique. Format strictly as: "Score: [X]/100 | [Critique]".\nSource (${src}): "${srcText}"\nTranslation (${tgt}): "${tgtText}"`;
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  });
+  return (await res.json()).candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Score: --/100 | Evaluation failed';
+}
